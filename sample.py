@@ -37,12 +37,12 @@ for noise_amount in noise_levels:
             plt.imshow(recovered_image)
         case 'SSIM':
             # Calculate SSIM
-            value = ssim(image_gray, recovered_image, data_range=225)
+            value = ssim(image_gray, recovered_image, data_range=255)
             metric_values.append(value)
 
             # Display results
             print(f"Noise amount: {noise_amount}, SSIM value: {value:.2f} dB")
-            plt.imshow(recovered_image)
+            plt.imshow(recovered_image, cmap='gray')
 
 match IMAGE_TASK:
     case 'PSNR':

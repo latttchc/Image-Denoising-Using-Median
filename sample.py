@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 # from google.colab.patches import cv2_imshow
 from skimage.util import random_noise
 from skimage.metrics import peak_signal_noise_ratio as psnr
+from skimage.metrics import structural_similarity as ssim
+
+# 'PSNR' or 'SSIM'
+IMAGE_TASK = 'PSNR'
  
 # Load and preprocess the image
 image_path = cv2.imread("dataset/Lena-image.png")
@@ -22,10 +26,16 @@ for noise_amount in noise_levels:
     # Apply median filter
     recovered_image = cv2.medianBlur(image_sp, 3)  # Using a 3x3 kernel
  
-    # Calculate PSNR
-    value = psnr(image_gray, recovered_image)
-    metric_values.append(value)
- 
+    match IMAGE_TASK:
+        case 'PSNR':
+            # Calculate PSNR
+            value = psnr(image_gray, recovered_image)
+            metric_values.append(value)
+        case 'SSIM':
+            # Calculate SSIM
+            value = ssim(image_gray, recovered_image)
+            metric_values.append(value)
+    
     # Display results
     print(f"Noise amount: {noise_amount}, PSNR value: {value:.2f} dB")
     plt.imshow(recovered_image)
@@ -44,7 +54,7 @@ plt.grid(True)
  
 # Adding a table to display the Noise Amount and PSNR Values
 plt.subplot(1, 2, 2)
-table_data = [[f"{amount:.2f}", f"{psnr:.2f}"] for amount, psnr in zip(noise_levels, values)]
+table_data = [[f"{amount:.2f}", f"{psnr:.2f}"] for amount, psnr in zip(noise_levels, metric_values)]
 column_labels = ["Noise Amount", "PSNR (dB)"]
 plt.axis('tight')
 plt.axis('off')

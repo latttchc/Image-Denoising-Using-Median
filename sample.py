@@ -6,7 +6,7 @@ from skimage.util import random_noise
 from skimage.metrics import peak_signal_noise_ratio as psnr
  
 # Load and preprocess the image
-image_path = cv2.imread("/dataset/.png")
+image_path = cv2.imread("dataset/Lena-image.png")
 image_gray = cv2.cvtColor(image_path, cv2.COLOR_BGR2GRAY)
  
 # Define the noise levels

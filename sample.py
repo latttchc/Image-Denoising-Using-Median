@@ -84,7 +84,7 @@ match IMAGE_TASK:
         
         # Adding a table to display the Noise Amount and SSIM Values
         plt.subplot(1, 2, 2)
-        table_data = [[f"{amount:.2f}", f"{psnr:.2f}"] for amount, psnr in zip(noise_levels, metric_values)]
+        table_data = [[f"{amount:.2f}", f"{ssim:.2f}"] for amount, ssim in zip(noise_levels, metric_values)]
         column_labels = ["Noise Amount", "SSIM (dB)"]
         plt.axis('tight')
         plt.axis('off')

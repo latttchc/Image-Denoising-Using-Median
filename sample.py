@@ -7,7 +7,7 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 
 # 'PSNR' or 'SSIM' or 'MSE'
-IMAGE_TASK = 'MSE'
+IMAGE_TASK = 'PSNR'
 
 def mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)

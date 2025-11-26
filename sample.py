@@ -7,7 +7,7 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 
 # 'PSNR' or 'SSIM'
-IMAGE_TASK = 'PSNR'
+IMAGE_TASK = 'SSIM'
  
 # Load and preprocess the image
 image_path = cv2.imread("dataset/Lena-image.png")

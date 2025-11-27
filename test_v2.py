@@ -9,8 +9,8 @@ import pandas as pd
 
 # 'PSNR' or 'SSIM' or 'MSE'
 IMAGE_TASK = 'PSNR'
-IMAGE_OUTPUT = True
 IMAGE_PASS = ''
+NOISE_IMAGE = True
 
 # noise of MSE
 def mse(basic_image, noise_image):
@@ -28,12 +28,28 @@ results = []
 sp_image = []
 ga_image = []
 
-if IMAGE_OUTPUT:
+if NOISE_IMAGE:
     for noise_amount in noise_levels:
         sp_noisy = random_noise(image_gray, mode='s&p', amount=noise_amount)
         sp_image.append(sp_noisy)
         ga_noisy = random_noise(image_gray, mode='gaussian', var=noise_amount)
         ga_image.append(ga_noisy)
+    # Output noise image 
+    fig, axes = plt.subplots(2, 11, figsize=(22, 4))
+
+    for i, img in enumerate(sp_image[:11]):
+        axes[0,i].imshow(img, cmap='gray')
+        axes[0,i].axis('off')
+        axes[0,i].set_title(f"S&P\n{noise_levels[i]:.3f}")
+
+    for i, img in enumerate(ga_image[:11]):
+        axes[1,i].imshow(img, cmap='gray')
+        axes[1,i].axis('off')
+        axes[1,i].set_title(f"Gauss\n{noise_levels[i]:.3f}")
+
+    plt.suptitle("Noise Comparision: Salt & Pepper vs Gaussian", fontsize=14)
+    plt.tight_layout()
+    plt.show()
 
 for noise_type in noise_types:
     for method in filter_methods:
@@ -70,22 +86,6 @@ for noise_type in noise_types:
 
             print(f"Noise: {noise_type}, Amount: {noise_amount:.3f}, Filter: {method}, {IMAGE_TASK}: {value:.2f} dB")
 
-# Output noise image 
-fig, axes = plt.subplots(2, 11, figsize=(22, 4))
-
-for i, img in enumerate(sp_image[:11]):
-    axes[0,i].imshow(img, cmap='gray')
-    axes[0,i].axis('off')
-    axes[0,i].set_title(f"S&P\n{noise_levels[i]:.3f}")
-
-for i, img in enumerate(ga_image[:11]):
-    axes[1,i].imshow(img, cmap='gray')
-    axes[1,i].axis('off')
-    axes[1,i].set_title(f"Gauss\n{noise_levels[i]:.3f}")
-
-plt.suptitle("Noise Comparision: Salt & Pepper vs Gaussian", fontsize=14)
-plt.tight_layout()
-plt.show()
 
 df = pd.DataFrame(results)
 

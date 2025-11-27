@@ -7,15 +7,10 @@ from skimage.util import random_noise
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 import pandas as pd
+import config
 
-# 'PSNR' or 'SSIM' or 'MSE'
-IMAGE_TASK = 'PSNR'
-# dataset file name
-IMAGE_NAME = ''
-# save graph as file
-SAVE_RESULT = True
-# Output noise images 
-OUTPUT_IMAGE = True
+IMAGE_TASK = config.TASK_NAME
+IMAGE_NAME = config.FILE_NAME
 
 if not os.path.exists("dataset"):
     os.makedirs("dataset")
@@ -50,7 +45,7 @@ results = []
 sp_image = []
 ga_image = []
 
-if OUTPUT_IMAGE:
+if config.OUTPUT_IMAGE:
     for noise_amount in noise_levels:
         sp_noisy = random_noise(image_gray, mode='s&p', amount=noise_amount)
         sp_image.append(sp_noisy)
@@ -71,7 +66,7 @@ if OUTPUT_IMAGE:
 
     plt.suptitle("Noise Comparision: Salt & Pepper vs Gaussian", fontsize=14)
     plt.tight_layout()
-    if SAVE_RESULT:
+    if config.SAVE_RESULT:
         plt.savefig(f"results/{IMAGE_NAME}-noises.png")
     plt.show()
 
@@ -141,7 +136,7 @@ for noise_type in noise_types:
 
     plt.suptitle(f"{noise_type.title()} Noise Analysis", fontsize=14)
     plt.tight_layout()
-    if SAVE_RESULT:
+    if config.SAVE_RESULT:
         plt.savefig(f"results/{IMAGE_TASK}_{noise_type}_analysis.png")
     plt.show()
 

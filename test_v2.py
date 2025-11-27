@@ -8,8 +8,8 @@ from skimage.metrics import structural_similarity as ssim
 import pandas as pd
 
 # 'PSNR' or 'SSIM' or 'MSE'
-IMAGE_TASK = 'MSE'
-IMAGE_OUTPUT = False
+IMAGE_TASK = 'PSNR'
+IMAGE_OUTPUT = True
 
 # noise of MSE
 def mse(basic_image, noise_image):

@@ -10,21 +10,24 @@ import pandas as pd
 
 # 'PSNR' or 'SSIM' or 'MSE'
 IMAGE_TASK = 'PSNR'
+# dataset file name
 IMAGE_NAME = ''
-NOISE_IMAGE = True
+# save graph as file
 SAVE_RESULT = True
-OUTPUT_DIR = 'result'
-
-if SAVE_RESULT and not os.path.exists(OUTPUT_DIR):
-    os.mkdir(OUTPUT_DIR)
+# Output noise images 
+OUTPUT_IMAGE = True
 
 if not os.path.exists("dataset"):
     os.makedirs("dataset")
     print("Created dataset folder. Please place image files in the folder.")
     exit()
 
+if not os.path.exists("results"):
+    os.makedirs("results")
+    print("Created results folder.")
+
 # Check if image file exists
-image_file_path = f"dataset/{IMAGE_NAME}"
+image_file_path = f"dataset/{IMAGE_NAME}.png"
 if not os.path.exists(image_file_path):
     print(f"Error: {image_file_path} not found.")
     print("Please place the image file in the dataset folder.")
@@ -36,7 +39,7 @@ def mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
 
 # Load and preprocess the image
-image_path = cv2.imread(f"dataset/{IMAGE_NAME}")
+image_path = cv2.imread(f"dataset/{IMAGE_NAME}.png")
 image_gray = cv2.cvtColor(image_path, cv2.COLOR_BGR2GRAY)
  
 # Define the noise levels
@@ -47,7 +50,7 @@ results = []
 sp_image = []
 ga_image = []
 
-if NOISE_IMAGE:
+if OUTPUT_IMAGE:
     for noise_amount in noise_levels:
         sp_noisy = random_noise(image_gray, mode='s&p', amount=noise_amount)
         sp_image.append(sp_noisy)
@@ -69,7 +72,7 @@ if NOISE_IMAGE:
     plt.suptitle("Noise Comparision: Salt & Pepper vs Gaussian", fontsize=14)
     plt.tight_layout()
     if SAVE_RESULT:
-        plt.savefig(f"{OUTPUT_DIR}/noise")
+        plt.savefig(f"results/{IMAGE_NAME}-noises.png")
     plt.show()
 
 for noise_type in noise_types:
@@ -138,5 +141,7 @@ for noise_type in noise_types:
 
     plt.suptitle(f"{noise_type.title()} Noise Analysis", fontsize=14)
     plt.tight_layout()
+    if SAVE_RESULT:
+        plt.savefig(f"results/{IMAGE_TASK}_{noise_type}_analysis.png")
     plt.show()
 

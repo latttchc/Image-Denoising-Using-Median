@@ -1,3 +1,4 @@
+import os
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,15 +10,33 @@ import pandas as pd
 
 # 'PSNR' or 'SSIM' or 'MSE'
 IMAGE_TASK = 'PSNR'
-IMAGE_PASS = ''
+IMAGE_NAME = ''
 NOISE_IMAGE = True
+SAVE_RESULT = True
+OUTPUT_DIR = 'result'
+
+if SAVE_RESULT and not os.path.exists(OUTPUT_DIR):
+    os.mkdir(OUTPUT_DIR)
+
+if not os.path.exists("dataset"):
+    os.makedirs("dataset")
+    print("Created dataset folder. Please place image files in the folder.")
+    exit()
+
+# Check if image file exists
+image_file_path = f"dataset/{IMAGE_NAME}"
+if not os.path.exists(image_file_path):
+    print(f"Error: {image_file_path} not found.")
+    print("Please place the image file in the dataset folder.")
+    exit()
+
 
 # noise of MSE
 def mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
- 
+
 # Load and preprocess the image
-image_path = cv2.imread(IMAGE_PASS)
+image_path = cv2.imread(f"dataset/{IMAGE_NAME}")
 image_gray = cv2.cvtColor(image_path, cv2.COLOR_BGR2GRAY)
  
 # Define the noise levels
@@ -49,6 +68,8 @@ if NOISE_IMAGE:
 
     plt.suptitle("Noise Comparision: Salt & Pepper vs Gaussian", fontsize=14)
     plt.tight_layout()
+    if SAVE_RESULT:
+        plt.savefig(f"{OUTPUT_DIR}/noise")
     plt.show()
 
 for noise_type in noise_types:

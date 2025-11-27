@@ -10,13 +10,14 @@ import pandas as pd
 # 'PSNR' or 'SSIM' or 'MSE'
 IMAGE_TASK = 'PSNR'
 IMAGE_OUTPUT = True
+IMAGE_PASS = ''
 
 # noise of MSE
 def mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
  
 # Load and preprocess the image
-image_path = cv2.imread("dataset/Lena-image.png")
+image_path = cv2.imread(IMAGE_PASS)
 image_gray = cv2.cvtColor(image_path, cv2.COLOR_BGR2GRAY)
  
 # Define the noise levels

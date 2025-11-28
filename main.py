@@ -34,7 +34,7 @@ def mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
 
 # Load and preprocess the image
-image_path = cv2.imread(f"dataset/{IMAGE_NAME}.png")
+image_path = cv2.imread(f"{image_file_path}")
 image_gray = cv2.cvtColor(image_path, cv2.COLOR_BGR2GRAY)
  
 # Define the noise levels

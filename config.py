@@ -1,4 +1,4 @@
-# 'PSNR' or 'SSIM' or 'MSE'
+# 'PSNR' or 'SSIM' or 'MSE' or 'LPIPS'
 TASK_NAME = 'PSNR'
 # dataset file name
 FILE_NAME = ''

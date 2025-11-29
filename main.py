@@ -6,6 +6,10 @@ from matplotlib.gridspec import GridSpec
 from skimage.util import random_noise
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
+import lpips
+import torch
+import torchvision.transforms.functional as TF
+from PIL import Image
 import pandas as pd
 import config
 
@@ -29,10 +33,44 @@ if not os.path.exists(image_file_path):
     exit()
 
 
-# noise of MSE
+# Function of MSE
 def loss_fn_mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
 
+# Initialize LPIPS model
+alex_model = None
+def get_lpips_model():
+    global alex_model
+    if alex_model is None:
+        alex_model = lpips.LPIPS(net='alex')
+    return alex_model
+
+# Function of LPIPS
+def loss_fn_lpips(basic_image, noise_image):
+    alex = get_lpips_model()
+
+    # Convert grayscale image to 3 channels(RGB)
+    if len(basic_image.shape) == 2:
+        basic_image = np.stack([basic_image] * 3, axis=-1)
+    if len(noise_image.shape) == 2:
+        noise_image = np.stack([noise_image] * 3, axis=-1)
+    
+    # Convert to PIL.Image
+    basic_pil = Image.fromarray(basic_image.astype(np.uint8))
+    noise_pil = Image.fromarray(noise_image.astype(np.uint8))
+    
+    # Convert to tensor (normalize to [-1, 1])
+    basic_tensor = (TF.to_tensor(basic_pil) - 0.5) * 2
+    basic_tensor = basic_tensor.unsqueeze(0)
+    
+    noise_tensor = (TF.to_tensor(noise_pil) - 0.5) * 2
+    noise_tensor = noise_tensor.unsqueeze(0)
+    
+    # Calculate LPIPS
+    with torch.no_grad():
+        value = alex(basic_tensor, noise_tensor)
+    
+    return value.item()
 
 # Load and preprocess the image
 image_path = cv2.imread(f"{image_file_path}")
@@ -96,6 +134,8 @@ for noise_type in noise_types:
                     value = ssim(image_gray, recovered, data_range=255)
                 case 'MSE':
                     value = loss_fn_mse(image_gray, recovered)
+                case 'LPIPS':
+                    value = loss_fn_lpips(image_gray, recovered)
 
             results.append({
                 'noise_type': noise_type,

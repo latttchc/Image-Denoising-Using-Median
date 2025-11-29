@@ -30,8 +30,9 @@ if not os.path.exists(image_file_path):
 
 
 # noise of MSE
-def mse(basic_image, noise_image):
+def loss_fn_mse(basic_image, noise_image):
     return np.mean((noise_image - basic_image) ** 2)
+
 
 # Load and preprocess the image
 image_path = cv2.imread(f"{image_file_path}")
@@ -94,7 +95,7 @@ for noise_type in noise_types:
                 case 'SSIM':
                     value = ssim(image_gray, recovered, data_range=255)
                 case 'MSE':
-                    value = mse(image_gray, recovered)
+                    value = loss_fn_mse(image_gray, recovered)
 
             results.append({
                 'noise_type': noise_type,

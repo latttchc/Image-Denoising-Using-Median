@@ -29,6 +29,15 @@
 
 評価には **MSE / PSNR / SSIM / LPIPS** を使用します。
 
+- MSE (Mean Squared Error)
+-- 画素値差の二乗平均。値が小さいほどオリジナルに近い。
+- PSNR (Peak Signal-to-Noise Ratio)
+-- 最大画素値と MSE から計算される信号対雑音比（dB）。大きいほど高品質。
+- SSIM (Structural Similarity Index)
+-- 明るさ・コントラスト・構造の類似度を同時に評価する指標。1 に近いほど構造がよく保たれている。
+- LPIPS (Learned Perceptual Image Patch Similarity)
+-- ニューラルネットベースの知覚的類似度指標。0 に近いほど人間の主観的に似ていると解釈。
+
 ---
 
 ## 2. 各種機能
